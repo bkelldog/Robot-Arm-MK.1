@@ -1,0 +1,26 @@
+#include <Servo.h>
+
+int tick = 0;
+Servo thumb;
+
+void setup() {
+  thumb.attach(10);
+  Serial.begin(9600);
+  
+  thumb.write(0);
+}
+
+void loop() {
+  thumb.write(90);
+  tick++;
+
+  if (tick > 180) {
+    delay(30);
+    tick = 0;
+    thumb.write(tick);
+    delay(900);
+  }
+
+   delay(30);
+   Serial.println(tick);
+}
