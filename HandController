@@ -1,0 +1,62 @@
+//Hand Control
+//NJIT Robotics Club
+//11.13.2019
+
+//This class will control all functions related to motion of the robotic hand and arm.
+//Certain pins will control the servo for each finger, and others will control the
+//servos which control the upper arm movement.
+
+#include <Servo.h>
+
+Servo thumb, index, middle, ring, pinky;
+
+//These are the input pins which will read the input for the fingers to mimic.
+int thumbInput = A0, indexInput = A1, middleInput = A2, ringInput = A3, pinkyInput = A4;
+
+//These ints will hold the value of the input pins read by analogRead(), between 0 and 1023 (inc)
+int thumbNum, indexNum, middleNum, ringNum, pinkyNum;
+
+void setup() 
+{
+  //Each servo is attached to an analog pin
+  thumb.attach(11);
+  index.attach(10);
+  middle.attach(9);
+  ring.attach(6);
+  pinky.attach(5);
+
+  //The input comes in as an integer between 0 and 1023, inclusive.
+  pinMode(thumbInput, INPUT);
+  pinMode(indexInput, INPUT);
+  pinMode(middleInput, INPUT);
+  pinMode(ringInput, INPUT);
+  pinMode(pinkyInput, INPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() 
+{
+  //First, take in the current state of the input
+  thumbNum = analogRead(thumbInput);
+  indexNum = analogRead(indexInput);
+  middleNum = analogRead(middleInput);
+  ringNum = analogRead(ringInput);
+  pinkyNum = analogRead(pinkyInput);
+
+  //Then, write the input values from teh 0-1023 range to 0-180 range
+  thumbNum = map(thumbNum, 300, 800, 0, 180);
+  indexNum = map(indexNum, 0, 1023, 0, 180);
+  middleNum = map(middleNum, 0, 1023, 0, 180);
+  ringNum = map(ringNum, 0, 1023, 0, 180);
+  pinkyNum = map(pinkyNum, 0, 1023, 0, 180);
+
+  //Finally, write the new values of each input to its corresponding finger
+  thumb.write(thumbNum);
+  index.write(indexNum);
+  middle.write(middleNum);
+  ring.write(ringNum);
+  pinky.write(pinkyNum);
+
+  Serial.println(thumbNum);
+}
